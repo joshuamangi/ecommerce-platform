@@ -1,0 +1,26 @@
+version: '3.8'
+# configure services
+services:
+  catalog-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db:5432/catalog
+    depends_on:
+      - db
+      - cache
+
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  cache:
+    image: redis:7-7-alpine
+
+volumes:
+  pgdata:
+# configure app service
+# configure database service
+# configure redis service
