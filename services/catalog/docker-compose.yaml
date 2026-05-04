@@ -2,13 +2,17 @@
 services:
   catalog-api:
     build: .
+    container_name: catalog_api
     ports:
       - "8000:8000"
+    volumes:
+      - .:/app
     environment:
       - DATABASE_URL=postgresql://user:pass@db:5432/catalog
     depends_on:
       - db
       - cache
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   db:
     image: postgres:15-alpine
