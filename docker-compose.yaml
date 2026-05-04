@@ -1,0 +1,8 @@
+include:
+  - path: ./services/catalog/docker-compose.yaml
+services:
+  gateway:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      
