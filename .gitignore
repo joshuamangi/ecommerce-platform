@@ -1,1 +1,28 @@
+##### Environments
 .env
+.env.*
+*.env
+env
+
+##### Virtual Environments
+.venv
+venv
+
+##### IDE
+.vscode
+
+##### Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+##### MacOS
+.DS_Store
+
+##### Docker
+pgdata/
+*.db
+
+##### Logs
+*.log
