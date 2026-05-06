@@ -1,13 +1,9 @@
-from fastapi import FastAPI
-import time
+from fastapi import APIRouter
 
-app = FastAPI()
+router = APIRouter(prefix="/catalogue", tags="catalogue")
 
 
-# GET
-@app.get("/")
+@router.get("/")
 def get_catalog():
     # Return dummy catalog
     return [{"sku_id": 1, "category_id": 1, "metadata_blob": "test"}]
-
-# POST

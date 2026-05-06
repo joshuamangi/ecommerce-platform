@@ -4,13 +4,13 @@
 			"path": "."
 		},
 		{
-			"path": "services/catalog"
-		},
-		{
 			"path": "services/inventory"
 		},
 		{
 			"path": "services/pricing"
+		},
+		{
+			"path": "services/catalogue"
 		}
 	],
 	"settings": {}

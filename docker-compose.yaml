@@ -1,5 +1,5 @@
 include:
-  - path: ./services/catalog/docker-compose.yaml
+  - path: ./services/catalogue/docker-compose.yaml
 services:
   gateway:
     image: nginx:alpine
