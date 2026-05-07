@@ -1,14 +1,14 @@
 # configure services
 services:
-  catalog-api:
+  catalogue-api:
     build: .
-    container_name: catalog_api
+    container_name: catalogue_api
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-    environment:
-      - DATABASE_URL=postgresql://user:pass@db:5432/catalog
+    env_file:
+      - .env
     depends_on:
       - db
       - cache
@@ -16,10 +16,10 @@ services:
 
   db:
     image: postgres:15-alpine
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=catalog
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -28,6 +28,3 @@ services:
 
 volumes:
   pgdata:
-# configure app service
-# configure database service
-# configure redis service
