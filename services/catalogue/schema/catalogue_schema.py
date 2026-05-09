@@ -6,6 +6,8 @@ class CatalogueBase(BaseModel):
     sku: str
     name: str
     description: Optional[str] = None
+    price: float
+    stock_quantity: int
 
 
 class CatalogueCreate(CatalogueBase):

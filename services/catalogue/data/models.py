@@ -13,3 +13,5 @@ class Catalogue(Base):
     sku = Column(String, unique=True, nullable=False, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
+    price = Column(Float, nullable=False, default=0.0)
+    stock_quantity = Column(Integer, nullable=False, default=0)
