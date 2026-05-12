@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_HOST: str
     POSTGRES_PORT: int
+    REDIS_HOST: str
+    REDIS_PORT: int
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
@@ -20,7 +22,7 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self):
         return (
-            f"postgresql+psycopg2://"
+            f"postgresql+asyncpg://"
             f"{self.POSTGRES_USER}:"
             f"{self.POSTGRES_PASSWORD}"
             f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/"

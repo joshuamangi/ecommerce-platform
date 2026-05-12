@@ -14,7 +14,8 @@ services:
       - cache
     command: >
       sh -c "
-      python wait_for_db.py &&
+      python -m scripts.redis_health_check &&
+      python -m scripts.wait_for_db &&
       alembic upgrade head &&
       uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
     restart: on-failure
@@ -30,6 +31,12 @@ services:
 
   cache:
     image: redis:7-alpine
+    ports: 
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 
 volumes:
   pgdata:
+  redis_data:
