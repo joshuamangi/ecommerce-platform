@@ -1,5 +1,10 @@
 # Tech Journal
 
+- It is finding and building solutions to problems.
+- It is important to note System Design is a continuous thing.
+- It is a matter of understanding tradeoffs.
+- For scaling it is very crucial to know the time and space complexities of data structures and algorithms
+
 ## API
 
 - [ ] When you run for example docker compose stop db: Observe how the application behaves
@@ -84,6 +89,27 @@ Transaction completed in 10.1484 seconds
 
 - [ ] Serialization is the highest level of isolation in the system, and it provides the effect of operations being executed sequentially, even though they are concurrent. It usually has very high performance effects. It was designed to mitigatte cases of dirty reads, phantom reads, write skews, non-repeatable reads
 
+- [ ] Modelling a database involves transitioning from EAV model(Entity-Attribute-Value) model and flat tables to having a hybrid to circumvent the cost of joins and having large flat tables
+
+- [ ] Creating indexes involves monitoring the database, analyzing it and knowing what to index. Use  GIN index that maps key value pair attributtes to rows
+
+- [ ] Stored Procedures adds atomicity and helps to reduce latency and adds logic inside the database. In the example of an ecommerce platform, it can allow you to check if inventory stock exists or not before reducing the stock quantity or making an order, hence ensuring atomicity and reduces the number of requests for multiple tables. It should however not be overused since it will make it hard to perform tests since logic exists inside the db
+
 ## Redis
 
 - [ ] For busy systems opening and closing transactions per requests gets expensive due to TCP handshakes, authentication and socket handling which makes processes expensive, hence the implementation of connection pooling. So connection are pooled, kept alive, borrowed
+- [ ] Redis does not resolve underlying issues with the database, it only serves as a performance upgrade.
+
+## Data Structures and Algorithms
+
+It is important in Computer science to be aware of the impact of loops, algorithms and their time and space complexities. Commonly approximated using Big O notation : which evaluates the worst case scenarios. Big theta notation which checks the mean time and Big Omega notation which looks at the best case scenario.
+In computer science the aim is to always optimize the operation. Time complexity is measured in operations instead of time because of difference in hardware.
+
+- [ ] Runtimes
+      - Constant runtimes: denoted using O(1). Which means regardless of the size of the data it will take the same operation for example retrieving an item from an array, mathematical operations, fetching an item from a hashmap, Poppring and pushing from a stack. Constant runtimes are the best runtimes.
+      - Logarithmic runtimes: denoted using O(Log(n)): Usually the base is to base 2 since computer science uses binary. The logarithmic runtime of an algorithm halves the size of the data and discards the rest. A common example is to use the Binary search of sorted data. If you have sorted data, use binary search.
+      - Linear runtimes: denoted as O(n). This means it grows with the size of the data. A good example of this is for loops which looks through all the data. To optimize this, if you already have sorted data, use binary search. Also if you encounter a for loop and you have sorted data, use a for loop
+      - Quadratic runtimes: denoted as O(n^2): Just like Linear runtime, Audratic runtimes are polynomial runtimes and are manageable to some extent.
+      - Cubic runtimes: denoted as (n^3). They include triple for loops and matrix operations
+      - Polynomial runtimes: denoted as O(n^k). This includes linear runtime, quadratic and cubic runtime. They are considered manageable and are tractable problems. intractable problems include exponentials. When designing algortihms, the goal is to come up with polinomial solutions and if exponential solutions show up, one should think of Dynamic Programming or Divide and Conquer.
+      - Exponential runtimes: denoted as O{2^n}. These are considerred redflags in computer science
