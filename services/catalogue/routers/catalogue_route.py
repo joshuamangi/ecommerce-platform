@@ -67,4 +67,4 @@ async def edit_catalogue(catalogue_id: int, updated_catalogue: CatalogueBase, db
     if not catalogue_exists:
         raise HTTPException(detail="Catalogue Not Found",
                             status_code=status.HTTP_404_NOT_FOUND)
-    return await CatalogueHandler.update_catalogue(db=db, sku=updated_catalogue.sku, updated_catalogue=updated_catalogue)
+    return await CatalogueHandler.update_catalogue(db=db, id=catalogue_id, sku=updated_catalogue.sku, updated_catalogue=updated_catalogue)

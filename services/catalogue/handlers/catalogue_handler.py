@@ -92,8 +92,9 @@ class CatalogueHandler:
         return existing_catalogue
 
     @staticmethod
-    async def update_catalogue(db: AsyncSession, updated_catalogue: CatalogueBase, sku: str):
+    async def update_catalogue(db: AsyncSession, updated_catalogue: CatalogueBase, sku: str, id: int):
 
+        key = f"catalogue:{id}:data"
         query = select(Catalogue).where(Catalogue.sku == sku)
         result = await db.execute(query)
         existing_catalogue = result.scalars().one_or_none()
@@ -107,4 +108,6 @@ class CatalogueHandler:
 
         await db.commit()
         await db.refresh(existing_catalogue)
+
+        await redis_client.delete(key)
         return existing_catalogue
