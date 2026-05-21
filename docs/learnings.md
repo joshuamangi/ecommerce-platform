@@ -12,3 +12,5 @@
 - Transfer things from the head to how it is in real life by writing down
 - It is not just about learning the strategies, but the need and implications
 - The price is what you pay for having or not having something
+- Creating 100,000 records takes soooo long with indexes
+- Look at building indexes after already inserting records to prevent the overhead for writes. Writes with indexes take a very long time
