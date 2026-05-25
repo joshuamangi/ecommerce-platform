@@ -1,5 +1,6 @@
 # Learnings
 
+- System design requires knowing the nature of data as that describes how the data will be handled. Hence also understand the type of database to use, and the data structures to be used..
 - The whole point of Computer science is to find solutions and implement them.
 - These solutions usually have **tradeoffs**.
 - These solutions usually have **cause and effect**
@@ -14,3 +15,13 @@
 - The price is what you pay for having or not having something
 - Creating 100,000 records takes soooo long with indexes
 - Look at building indexes after already inserting records to prevent the overhead for writes. Writes with indexes take a very long time
+- A table is just a data structure that store data inform of records(rows) and fields(columns). And sql is a language for interacting with the table
+- System design is separating a problem into smaller bits in a framework, and solving the problem steps by step.
+- Scaling requires deep and deep understanding of data types, and how the complexities for time and space impact latency, throughput and availability for solutions
+- System deep dives are more about your overall understanding of technologies, their tradeoffs and their applications
+- There is data structures, data validation, data creation, data retrieval, data search, data ingestion, data modelling, data pipeline, data access, data caching, data queues, data stores, data traffic, data flow, data security, data protection, data metadata, data throughput, data consistency, data latency, data availability, data scaling, data invalidation
+- Geo DNS allows retrieval of both location and IP while DNS only returns the IP. This allows routing to the nearest Edge Point of Presence. This is also done by Consistent Hashing to prevent overloading one server.
+- Important to understand the change in approach from local and regional scenarios to global situations
+- It is important to understand what happens when things go globally.
+- There is usually a CAP theorem tradeoff or PACELC tradeoff, and you can possible have both by decoupling
+- The real cost of highly distributed systems is very high!
