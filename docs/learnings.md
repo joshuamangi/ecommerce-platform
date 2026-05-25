@@ -25,3 +25,6 @@
 - It is important to understand what happens when things go globally.
 - There is usually a CAP theorem tradeoff or PACELC tradeoff, and you can possible have both by decoupling
 - The real cost of highly distributed systems is very high!
+- There are ACID transactions and BASE operations ACID means Atomicity, Consistency, Isolation and Durability. While BASE refers to Basically Available, Simple State Eventual Consistency
+- Databases requires extensive monitoring and analysis to be able to know how to index the data. There is B+ Tree index, Composite index and Covering index
+- When using EXPLAIN ANALYZE if it shows Seq Scan it indicattes if it is using an index or not
