@@ -26,7 +26,7 @@ class Catalogue(Base):
                         server_default=func.now(), onupdate=func.now())
     inventory = relationship(
         "Inventory",
-        back_populates="Catalogue",
+        back_populates="catalogue",
         uselist=False,
         cascade="all, delete-orphan"
     )

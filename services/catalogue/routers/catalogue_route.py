@@ -1,5 +1,5 @@
 import asyncio
-import time
+import socket
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from data.database import get_db
@@ -8,15 +8,23 @@ from schema.catalogue_schema import CatalogueBase, CatalogueOut
 router = APIRouter(prefix="/catalogue", tags=["catalogue"])
 
 
+@router.get("/hostname")
+def hostname():
+    return {
+        "hostname": socket.gethostname()
+    }
 # GET
+
+
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_catalogue(db: AsyncSession = Depends(get_db)):
     # Return dummy catalogue
     existing_catalogues = await CatalogueHandler.fetch_all_catalogues(db=db)
     return existing_catalogues
 
-
 # GET by catalogue_id
+
+
 @router.get("/{catalogue_id}", status_code=status.HTTP_200_OK, response_model=CatalogueOut)
 async def retrieve_catalogue_by_id(catalogue_id: int, db: AsyncSession = Depends(get_db)):
     """This implements cache aside strategy"""

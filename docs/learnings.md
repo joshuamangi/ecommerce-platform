@@ -28,3 +28,7 @@
 - There are ACID transactions and BASE operations ACID means Atomicity, Consistency, Isolation and Durability. While BASE refers to Basically Available, Simple State Eventual Consistency
 - Databases requires extensive monitoring and analysis to be able to know how to index the data. There is B+ Tree index, Composite index and Covering index
 - When using EXPLAIN ANALYZE if it shows Seq Scan it indicattes if it is using an index or not
+- Understand the Query Optimizer for deciding when to or not to use and index
+- Historical statistics in postgres matter a lot, for the query optimizer to decide whether to use an index or not
+- Low cardinality means a column in a table that has a lot of values. Hence that is what should be indexed
+- Using an API Gateway or a Load balancer should be primarily to redirect traffic and check headers
