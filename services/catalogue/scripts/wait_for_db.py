@@ -1,7 +1,9 @@
 import socket
 import time
-DB_HOST = "db"
-DB_PORT = 5432
+
+from utils.config import settings
+DB_HOST = settings.POSTGRES_HOST
+DB_PORT = settings.POSTGRES_PORT
 
 MAX_RETRIES = 30
 RETRY_DELAY = 2

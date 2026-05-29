@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from data.database import get_db
 from handlers.catalogue_handler import CatalogueHandler
 from schema.catalogue_schema import CatalogueBase, CatalogueOut
-router = APIRouter(prefix="/catalogue", tags=["catalogue"])
+router = APIRouter(prefix="/api/catalogue", tags=["catalogue"])
 
 
 @router.get("/hostname")

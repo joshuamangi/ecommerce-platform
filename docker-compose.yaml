@@ -1,8 +1,58 @@
-include:
-  - path: ./services/catalogue/docker-compose.yaml
 services:
-  gateway:
+  catalogue-api:
+    build:
+      context: ./services/catalogue
+    working_dir: /app/services/catalogue
+    environment:
+      - ENV_FILE=.env.docker
+    volumes:
+      - .:/app
+    depends_on:
+      - catalogue-db
+      - cache
+    command: >
+      sh -c "
+      python -m scripts.redis_health_check &&
+      python -m scripts.wait_for_db &&
+      uvicorn main:app --host 0.0.0.0 --port 8000"
+    
+  catalogue-db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./services/catalogue/.env.docker
+    volumes:
+      - pgdata_catalogue:/var/lib/postgresql/data
+
+  cache:
+    image: redis:7-alpine
+    ports: 
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+  
+  catalogue-migration:
+    build:
+      context: ./services/catalogue
+    working_dir: /app/services/catalogue
+    volumes:
+      - .:/app
+    environment:
+      - ENV_FILE=.env.docker
+    depends_on:
+      - catalogue-db
+    command: alembic upgrade head
+  
+  nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
-      
+      - "8000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - catalogue-api
+  
+volumes:
+  pgdata_catalogue:
+  redis_data:

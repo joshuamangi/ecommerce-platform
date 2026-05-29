@@ -17,7 +17,7 @@ from schema.order_schema import (
 )
 
 router = APIRouter(
-    prefix="/orders",
+    prefix="/api/orders",
     tags=["orders"]
 )
 

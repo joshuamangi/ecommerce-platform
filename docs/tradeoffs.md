@@ -25,3 +25,9 @@ Done in 2.51 seconds.
 SELECT relname AS table_name, indexrelname AS index_name,idx_scan AS number_of_scans FROM pg_stat_user_indexes W
 HERE idx_scan = 0 AND indexrelname NOT LIKE '%_pkey%' AND indexrelname NOT LIKE '%_key%';
 ```
+
+- [ ] Hey is tool that makes it possible to stream requests for latency and loadbalancing
+
+```bash
+hey -n 10000 -c 10 http://localhost:8000/catalogue/hostname
+```
