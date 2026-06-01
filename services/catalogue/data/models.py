@@ -61,15 +61,3 @@ class Inventory(Base):
         "Catalogue",
         back_populates="inventory"
     )
-
-
-class Order(Base):
-    __tablename__ = "orders"
-    id = Column(Integer, primary_key=True, index=True)
-    catalogue_id = Column(Integer, ForeignKey("catalogue.id"), nullable=False)
-    quantity = Column(Integer, nullable=False)
-    status = Column(String, default="pending")
-
-    __table_args__ = (
-        CheckConstraint('quantity > 0', name='check_quantity_positive'),
-    )

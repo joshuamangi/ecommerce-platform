@@ -32,3 +32,5 @@
 - Historical statistics in postgres matter a lot, for the query optimizer to decide whether to use an index or not
 - Low cardinality means a column in a table that has a lot of values. Hence that is what should be indexed
 - Using an API Gateway or a Load balancer should be primarily to redirect traffic and check headers
+- It is important to note the communication between the client and server and the need for the API contract.
+- There is a huge shift that is introduced by microservices. It necessitates the usage of publishing and consuming events when shifting from monoliths. The need for adding functions and endpoints makes it more complicated.

@@ -3,8 +3,8 @@ services:
     build:
       context: ./services/catalogue
     working_dir: /app/services/catalogue
-    environment:
-      - ENV_FILE=.env.docker
+    env_file:
+      - ./services/catalogue/.env.docker
     volumes:
       - .:/app
     depends_on:
@@ -38,11 +38,14 @@ services:
     working_dir: /app/services/catalogue
     volumes:
       - .:/app
-    environment:
-      - ENV_FILE=.env.docker
+    env_file:
+      - ./services/catalogue/.env.docker
     depends_on:
       - catalogue-db
-    command: alembic upgrade head
+    command: >
+      sh -c "
+      python -m scripts.wait_for_db &&
+      alembic upgrade head"
   
   nginx:
     image: nginx:alpine

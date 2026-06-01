@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from routers import catalogue_route, order_route
+from routers import catalogue_route
 
 from data.redis import redis_client
 
@@ -14,4 +14,3 @@ app = FastAPI(lifespan=lifespan)
 
 
 app.include_router(catalogue_route.router)
-app.include_router(order_route.router)
