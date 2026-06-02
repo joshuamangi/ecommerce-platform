@@ -5,7 +5,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from data.database import get_db
 from handlers.catalogue_handler import CatalogueHandler
 from schema.catalogue_schema import CatalogueBase, CatalogueOut
-router = APIRouter(prefix="/api/catalogue", tags=["catalogue"])
+router = APIRouter(prefix="/catalogue", tags=["catalogue"])
+
+
+@router.get("/health", status_code=status.HTTP_200_OK)
+def get_health():
+    return {
+        "status": "Successful"
+    }
 
 
 @router.get("/hostname")

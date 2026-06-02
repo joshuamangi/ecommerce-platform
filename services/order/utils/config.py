@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
-    ORDERS_DB: str
-    ORDERS_DB_HOST: str
-    ORDERS_DB_PORT: int
+    DB: str
+    DB_HOST: str
+    DB_PORT: int
     REDIS_HOST: str
     REDIS_PORT: int
 
@@ -26,7 +26,7 @@ class Settings(BaseSettings):
             f"postgresql+asyncpg://"
             f"{self.POSTGRES_USER}:"
             f"{self.POSTGRES_PASSWORD}"
-            f"@{self.ORDERS_DB_HOST}:{self.ORDERS_DB_PORT}/"
+            f"@{self.DB_HOST}:{self.DB_PORT}/"
             f"{self.POSTGRES_DB}"
         )
 

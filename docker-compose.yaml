@@ -3,8 +3,10 @@ services:
     build:
       context: ./services/catalogue
     working_dir: /app/services/catalogue
-    env_file:
-      - ./services/catalogue/.env.docker
+    environment: #added because of separating local and docker
+      - ENV_FILE=.env.docker
+    expose:
+      - "8000"
     volumes:
       - .:/app
     depends_on:
@@ -15,6 +17,26 @@ services:
       python -m scripts.redis_health_check &&
       python -m scripts.wait_for_db &&
       uvicorn main:app --host 0.0.0.0 --port 8000"
+  
+  order-api:
+    build:
+      context: ./services/order
+    working_dir: /app/services/order
+    env_file:
+      - ./services/order/.env.docker
+    expose:
+      - "8010"
+    volumes:
+      - .:/app
+    depends_on:
+      - order-db
+      - cache
+    command: >
+      sh -c "
+      uv run python -m scripts.redis_health_check &&
+      uv run python -m scripts.wait_for_db &&
+      uv run python -m uvicorn main:app --host 0.0.0.0 --port 8010"
+
     
   catalogue-db:
     image: postgres:15-alpine
@@ -24,6 +46,15 @@ services:
       - ./services/catalogue/.env.docker
     volumes:
       - pgdata_catalogue:/var/lib/postgresql/data
+
+  order-db:
+    image: postgres:15-alpine
+    ports:
+      - "5433:5432"
+    env_file:
+      - ./services/order/.env.docker
+    volumes:
+      - pgdata_order:/var/lib/postgresql/data
 
   cache:
     image: redis:7-alpine
@@ -38,8 +69,8 @@ services:
     working_dir: /app/services/catalogue
     volumes:
       - .:/app
-    env_file:
-      - ./services/catalogue/.env.docker
+    environment:
+      - ENV_FILE=.env.docker
     depends_on:
       - catalogue-db
     command: >
@@ -47,6 +78,21 @@ services:
       python -m scripts.wait_for_db &&
       alembic upgrade head"
   
+  order-migration:
+    build:
+      context: ./services/order
+      dockerfile: Dockerfile
+    working_dir: /app/services/order
+    volumes:
+      - .:/app
+    environment:
+      - ENV_FILE=.env.docker
+    depends_on:
+      - order-db
+    command: >
+      sh -c "
+      uv run python -m scripts.wait_for_db &&
+      uv run alembic upgrade head"
   nginx:
     image: nginx:alpine
     ports:
@@ -58,4 +104,5 @@ services:
   
 volumes:
   pgdata_catalogue:
+  pgdata_order:
   redis_data:

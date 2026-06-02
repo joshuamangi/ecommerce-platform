@@ -3,7 +3,7 @@ import datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from data.models import Order, Catalogue
+from data.models import Order
 from schema.order_schema import OrderBase
 
 
@@ -28,34 +28,24 @@ class OrderHandler:
         return result.scalars().one_or_none()
 
     @staticmethod
-    async def create_order(db: AsyncSession, order: OrderBase):
-
-        # Validate catalogue exists
-        catalogue_query = select(Catalogue).where(
-            Catalogue.id == order.catalogue_id
-        )
-
-        catalogue_result = await db.execute(catalogue_query)
-
-        catalogue = catalogue_result.scalars().one_or_none()
-
-        if not catalogue:
-            return None
-
-        new_order = Order(
-            catalogue_id=order.catalogue_id,
-            quantity=order.quantity,
-            status=order.status
-        )
-
-        db.add(new_order)
-
-        await db.commit()
-
-        await db.refresh(new_order)
-
-        return new_order
-
+    # async def create_order(db: AsyncSession, order: OrderBase):
+    #     # Validate catalogue exists
+    #     catalogue_query = select(Catalogue).where(
+    #         Catalogue.id == order.catalogue_id
+    #     )
+    #     catalogue_result = await db.execute(catalogue_query)
+    #     catalogue = catalogue_result.scalars().one_or_none()
+    #     if not catalogue:
+    #         return None
+    #     new_order = Order(
+    #         catalogue_id=order.catalogue_id,
+    #         quantity=order.quantity,
+    #         status=order.status
+    #     )
+    #     db.add(new_order)
+    #     await db.commit()
+    #     await db.refresh(new_order)
+    #     return new_order
     @staticmethod
     async def update_order(
         db: AsyncSession,
