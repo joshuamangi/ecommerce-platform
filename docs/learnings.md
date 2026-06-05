@@ -34,3 +34,8 @@
 - Using an API Gateway or a Load balancer should be primarily to redirect traffic and check headers
 - It is important to note the communication between the client and server and the need for the API contract.
 - There is a huge shift that is introduced by microservices. It necessitates the usage of publishing and consuming events when shifting from monoliths. The need for adding functions and endpoints makes it more complicated.
+- use orjson for faster json serialization and deserialization
+- pydantic validation can increase latency hence needs to be used optimally
+- the event loop is a single threaded scheduler that executes tasks until it reaches an await command and gives back control to the event loop to continue processing other requests. Think of it like a barista serving coffee with grinding beans being a synchronous task and amking espresson being asynchronous
+- It may be difficult to identify async and sync issues in production and one should use the asyncio debug mode or PYTHONASYNCIODEBUG=1
+- Think of connection pools as ovens in a restaurant and the event pool as a chef. You don't recreate an oven everytime there is a request.

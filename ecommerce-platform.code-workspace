@@ -14,6 +14,9 @@
 		},
 		{
 			"path": "services/order"
+		},
+		{
+			"path": "services/auth"
 		}
 	],
 	"settings": {}
