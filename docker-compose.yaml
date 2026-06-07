@@ -11,6 +11,7 @@ services:
       - .:/app
     depends_on:
       - catalogue-db
+      - catalogue-migration
       - cache
     command: >
       sh -c "
@@ -30,6 +31,7 @@ services:
       - .:/app
     depends_on:
       - order-db
+      - order-migration
       - cache
     command: >
       sh -c "
@@ -37,7 +39,27 @@ services:
       uv run python -m scripts.wait_for_db &&
       uv run python -m uvicorn main:app --host 0.0.0.0 --port 8010"
 
-    
+  auth-api:
+    build:
+      context: ./services/auth
+    working_dir: /app/services/auth
+    environment:
+      PYTHONPATH: /app
+    env_file:
+      - ./services/auth/.env.docker
+    expose:
+      - "8020"
+    volumes:
+      - .:/app
+    depends_on:
+      - auth-db
+      - auth-migration
+    command: >
+      sh -c "
+      uv run python -m scripts.wait_for_db &&
+      uv run python -m uvicorn main:app --host 0.0.0.0 --port 8020"
+
+  
   catalogue-db:
     image: postgres:15-alpine
     ports:
@@ -55,6 +77,15 @@ services:
       - ./services/order/.env.docker
     volumes:
       - pgdata_order:/var/lib/postgresql/data
+
+  auth-db:
+    image: postgres:15-alpine
+    ports:
+      - "5434:5432"
+    env_file:
+      - ./services/auth/.env.docker
+    volumes:
+      - pgdata_auth:/var/lib/postgresql/data
 
   cache:
     image: redis:7-alpine
@@ -93,6 +124,23 @@ services:
       sh -c "
       uv run python -m scripts.wait_for_db &&
       uv run alembic upgrade head"
+    
+  auth-migration:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    working_dir: /app/services/auth
+    volumes:
+      - .:/app
+    environment:
+      - ENV_FILE=.env.docker
+    depends_on:
+      - auth-db
+    command: >
+      sh -c "
+      uv run python -m scripts.wait_for_db &&
+      uv run alembic upgrade head"
+
   nginx:
     image: nginx:alpine
     ports:
@@ -103,6 +151,7 @@ services:
       - catalogue-api
   
 volumes:
+  pgdata_auth:
   pgdata_catalogue:
   pgdata_order:
   redis_data:

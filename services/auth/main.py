@@ -1,6 +1,10 @@
-def main():
-    print("Hello from auth!")
+from routers import auth_route
+import sys
 
+from fastapi import FastAPI
 
-if __name__ == "__main__":
-    main()
+print("System Path", sys.path)
+
+app = FastAPI()
+
+app.include_router(auth_route.router)
