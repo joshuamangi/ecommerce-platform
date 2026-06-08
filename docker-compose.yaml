@@ -5,6 +5,7 @@ services:
     working_dir: /app/services/catalogue
     environment: #added because of separating local and docker
       - ENV_FILE=.env.docker
+      - PYTHONPATH=/app
     expose:
       - "8000"
     volumes:
@@ -15,16 +16,17 @@ services:
       - cache
     command: >
       sh -c "
-      python -m scripts.redis_health_check &&
-      python -m scripts.wait_for_db &&
-      uvicorn main:app --host 0.0.0.0 --port 8000"
+      uv run python -m scripts.redis_health_check &&
+      uv run python -m scripts.wait_for_db &&
+      uv run python -m uvicorn main:app --host 0.0.0.0 --port 8000"
   
   order-api:
     build:
       context: ./services/order
     working_dir: /app/services/order
-    env_file:
-      - ./services/order/.env.docker
+    environment:
+      - ENV_FILE=.env.docker
+      - PYTHONPATH=/app
     expose:
       - "8010"
     volumes:
@@ -44,9 +46,8 @@ services:
       context: ./services/auth
     working_dir: /app/services/auth
     environment:
-      PYTHONPATH: /app
-    env_file:
-      - ./services/auth/.env.docker
+      - ENV_FILE=.env.docker
+      - PYTHONPATH=/app
     expose:
       - "8020"
     volumes:
@@ -106,8 +107,8 @@ services:
       - catalogue-db
     command: >
       sh -c "
-      python -m scripts.wait_for_db &&
-      alembic upgrade head"
+      uv run python -m scripts.wait_for_db &&
+      uv run alembic upgrade head"
   
   order-migration:
     build:
@@ -149,6 +150,8 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - catalogue-api
+      - order-api
+      - auth-api
   
 volumes:
   pgdata_auth:

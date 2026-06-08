@@ -1,5 +1,5 @@
 import jwt
-import datetime
+from datetime import datetime, timedelta
 
 SECRET_KEY = "super-secret-key"
 ALGORITHM = "HS256"
@@ -11,7 +11,7 @@ class TokenService:
     @staticmethod
     def create_access_token(data: dict):
         payload = data.copy()
-        payload["exp"] = (datetime.utcnow() + datetime.timedelta(minutes=30)
+        payload["exp"] = (datetime.utcnow() + timedelta(minutes=30)
                           )
         return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 

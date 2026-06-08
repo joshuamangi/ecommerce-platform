@@ -27,3 +27,6 @@ pgdata/
 
 ##### Logs
 *.log
+
+##### Txt
+curl.txt

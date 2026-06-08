@@ -5,6 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from data.database import get_db
 from handlers.catalogue_handler import CatalogueHandler
 from schema.catalogue_schema import CatalogueBase, CatalogueOut
+from services.common.security.auth import get_current_user
+
 router = APIRouter(prefix="/catalogue", tags=["catalogue"])
 
 
@@ -24,7 +26,7 @@ def hostname():
 
 
 @router.get("/", status_code=status.HTTP_200_OK)
-async def get_catalogue(db: AsyncSession = Depends(get_db)):
+async def get_catalogue(db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
     # Return dummy catalogue
     existing_catalogues = await CatalogueHandler.fetch_all_catalogues(db=db)
     return existing_catalogues
@@ -33,7 +35,7 @@ async def get_catalogue(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/{catalogue_id}", status_code=status.HTTP_200_OK, response_model=CatalogueOut)
-async def retrieve_catalogue_by_id(catalogue_id: int, db: AsyncSession = Depends(get_db)):
+async def retrieve_catalogue_by_id(catalogue_id: int, db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
     """This implements cache aside strategy"""
     existing_catalogue = await CatalogueHandler.fetch_catalogue_by_id(
         db=db, id=catalogue_id)

@@ -15,7 +15,9 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
-@contextmanager
 def get_db():
-    with SessionLocal as db:
+    db: Session = SessionLocal()
+    try:
         yield db
+    finally:
+        db.close()
