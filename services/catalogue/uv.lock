@@ -135,6 +135,7 @@ dependencies = [
     { name = "greenlet" },
     { name = "orjson" },
     { name = "passlib" },
+    { name = "pika" },
     { name = "psycopg2-binary" },
     { name = "pydantic-settings" },
     { name = "pyjwt" },
@@ -152,6 +153,7 @@ requires-dist = [
     { name = "greenlet", specifier = ">=3.5.1" },
     { name = "orjson", specifier = ">=3.11.9" },
     { name = "passlib", specifier = ">=1.7.4" },
+    { name = "pika", specifier = ">=1.4.1" },
     { name = "psycopg2-binary", specifier = ">=2.9.12" },
     { name = "pydantic-settings", specifier = ">=2.14.1" },
     { name = "pyjwt", specifier = ">=2.13.0" },
@@ -453,6 +455,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/b6/06/9da9ee59a67fae7761aab3ccc84fa4f3f33f125b370f1ccdb915bf967c11/passlib-1.7.4.tar.gz", hash = "sha256:defd50f72b65c5402ab2c573830a6978e5f202ad0d984793c8dde2c4152ebe04", size = 689844, upload-time = "2020-10-08T19:00:52.121Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3b/a4/ab6b7589382ca3df236e03faa71deac88cae040af60c071a78d254a62172/passlib-1.7.4-py2.py3-none-any.whl", hash = "sha256:aa6bca462b8d8bda89c70b382f0c298a20b5560af6cbfa2dce410c0a2fb669f1", size = 525554, upload-time = "2020-10-08T19:00:49.856Z" },
+]
+
+[[package]]
+name = "pika"
+version = "1.4.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f7/09/8c42dd00c4b3e09ebd174455d30823c261eefef9d2b7e94ae9ca779704c1/pika-1.4.1.tar.gz", hash = "sha256:e851f3e4992adfbf8eb64e9b86d94e3382f92ba0200055abedbb29676b8e713b", size = 154268, upload-time = "2026-05-22T18:01:24.855Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7f/7b/a09c0d378ee8604220902c58103104b2304ef99744c4b7fc45312d280484/pika-1.4.1-py3-none-any.whl", hash = "sha256:2daae7bd422a0fc4f4879fd48c9a1932ed74a0bc7172e1e5f9bde63a101ed074", size = 164962, upload-time = "2026-05-22T18:01:23.429Z" },
 ]
 
 [[package]]

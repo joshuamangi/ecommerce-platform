@@ -1,24 +1,12 @@
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    status
-)
-
+from fastapi import (APIRouter,Depends,HTTPException,status)
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from data.database import get_db
-
 from handlers.order_handler import OrderHandler
+from schema.order_schema import (OrderBase,OrderOut)
+from services.common.security.auth import get_current_user
+from services.common.security.permission import require_permission
 
-from schema.order_schema import (
-    OrderBase,
-    OrderOut
-)
-
-router = APIRouter(
-    prefix="/orders",
-    tags=["orders"]
+router = APIRouter(prefix="/orders",tags=["orders"]
 )
 
 
@@ -125,7 +113,9 @@ async def update_order(
 )
 async def delete_order(
     order_id: int,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    user = Depends(get_current_user),
+    permission=Depends(require_permission)
 ):
 
     existing_order = await OrderHandler.delete_order(

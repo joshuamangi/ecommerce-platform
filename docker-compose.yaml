@@ -153,8 +153,20 @@ services:
       - order-api
       - auth-api
   
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - ./services/auth/.env.docker
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  
 volumes:
   pgdata_auth:
   pgdata_catalogue:
   pgdata_order:
   redis_data:
+  rabbitmq_data:

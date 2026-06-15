@@ -39,3 +39,15 @@
 - the event loop is a single threaded scheduler that executes tasks until it reaches an await command and gives back control to the event loop to continue processing other requests. Think of it like a barista serving coffee with grinding beans being a synchronous task and amking espresson being asynchronous
 - It may be difficult to identify async and sync issues in production and one should use the asyncio debug mode or PYTHONASYNCIODEBUG=1
 - Think of connection pools as ovens in a restaurant and the event pool as a chef. You don't recreate an oven everytime there is a request.
+- Nginx allows for adding redirects. api versioning, url rewriting, setting timeouts, proxy passes, adding and setting headers. Nginx can also perform ssl termination to remove the load of performing ssl termination within the application itself
+- Use of cache is to prevent querying the database all the time. And prevent delays with feedback in situations where race conditions may arise.
+- Atomicity is shown by Begin, Commit phrases that signify transactions are ither completed holistically or all fail. Isolation is achieved by SELECT FOR ... UPDATE to ensure transactions are isolated until completion, Durability is achieved by WAL logs that writes to disk. In case of power failures, it picks up from where it was last
+- Nginx creates novel ways of removing the wi=eight and burden of processing in application servers. Acting as a proxy to direct requests. SSL termination. Timeout handling. Horizontal scaling, Load balancing. Direct traffice to different distributed services using the upstream block.
+- With event-driven processing, the idea is to decide between asynchronous and synchronous processing
+- A database is just a collection of data until relationships start coming in. Linking the data with joins
+- Think of linear line for synchronous events and think of distributes ystems for asynchronous events.
+- Rule of thumb is for queries use REST, for commands use queues.
+- How the communication is sent. For event driven architecture. It has publishers, ack, consumers, dead letter exchanges.
+- COnsumers sent ACK to the broker,not th consumer. ACK is a form of handshake.
+- Idempotency is important and icludes creating a correlation id eg. review service + method to track events.
+- Code is literally just logic. It is adding logic to the code block.

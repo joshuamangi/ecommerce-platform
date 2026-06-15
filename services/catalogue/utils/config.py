@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     DB_PORT: int
     REDIS_HOST: str
     REDIS_PORT: int
+    RABBITMQ_HOST: str
+    RABBITMQ_DEFAULT_USER: str
+    RABBITMQ_DEFAULT_PASS: str
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
