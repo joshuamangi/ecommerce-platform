@@ -50,4 +50,8 @@
 - How the communication is sent. For event driven architecture. It has publishers, ack, consumers, dead letter exchanges.
 - COnsumers sent ACK to the broker,not th consumer. ACK is a form of handshake.
 - Idempotency is important and icludes creating a correlation id eg. review service + method to track events.
-- Code is literally just logic. It is adding logic to the code block.
+- Code is literally just logic. It is adding logic to the code block. Understanding the logic of things
+- Someone who undeerstands the system is just someone who understands how real life processes work
+- Need to stop assuming the tech world exists outside the physical world
+- Queues can be thought of as direct, fanout, topic, header. Anytime there is a task, it can be added to a queue
+- Queues make it possible to decouple and scale out
