@@ -55,3 +55,4 @@
 - Need to stop assuming the tech world exists outside the physical world
 - Queues can be thought of as direct, fanout, topic, header. Anytime there is a task, it can be added to a queue
 - Queues make it possible to decouple and scale out
+- The important items to note with regards to Observability is Logs, Metrics and Tracing.

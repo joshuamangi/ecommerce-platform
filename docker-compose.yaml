@@ -163,7 +163,16 @@ services:
       - ./services/auth/.env.docker
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-  
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - catalogue-api
+
 volumes:
   pgdata_auth:
   pgdata_catalogue:

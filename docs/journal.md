@@ -113,3 +113,11 @@ In computer science the aim is to always optimize the operation. Time complexity
       - Cubic runtimes: denoted as (n^3). They include triple for loops and matrix operations
       - Polynomial runtimes: denoted as O(n^k). This includes linear runtime, quadratic and cubic runtime. They are considered manageable and are tractable problems. intractable problems include exponentials. When designing algortihms, the goal is to come up with polinomial solutions and if exponential solutions show up, one should think of Dynamic Programming or Divide and Conquer.
       - Exponential runtimes: denoted as O{2^n}. These are considerred redflags in computer science
+
+## Nginx
+
+## FastAPI
+
+## Message Queues
+
+## Observability
