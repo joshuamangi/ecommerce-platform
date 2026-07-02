@@ -1,5 +1,6 @@
 import datetime
 
+from handlers.catalogue_client import get_catalogue
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -28,24 +29,22 @@ class OrderHandler:
         return result.scalars().one_or_none()
 
     @staticmethod
-    # async def create_order(db: AsyncSession, order: OrderBase):
-    #     # Validate catalogue exists
-    #     catalogue_query = select(Catalogue).where(
-    #         Catalogue.id == order.catalogue_id
-    #     )
-    #     catalogue_result = await db.execute(catalogue_query)
-    #     catalogue = catalogue_result.scalars().one_or_none()
-    #     if not catalogue:
-    #         return None
-    #     new_order = Order(
-    #         catalogue_id=order.catalogue_id,
-    #         quantity=order.quantity,
-    #         status=order.status
-    #     )
-    #     db.add(new_order)
-    #     await db.commit()
-    #     await db.refresh(new_order)
-    #     return new_order
+    async def create_order(db: AsyncSession, order: OrderBase):
+        # Validate catalogue exists
+        catalogue = await get_catalogue(order.catalogue_id)
+        if not catalogue:
+            return None
+        new_order = Order(
+            catalogue_id=order.catalogue_id,
+            quantity=order.quantity,
+            status=order.status
+        )
+        db.add(new_order)
+        await db.commit()
+        await db.refresh(new_order)
+        return new_order
+    
+    
     @staticmethod
     async def update_order(
         db: AsyncSession,

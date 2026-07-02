@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     DB_PORT: int
     REDIS_HOST: str
     REDIS_PORT: int
+    CATALOGUE_SERVICE: str
+    CATALOGUE_PORT: int
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
@@ -30,5 +32,12 @@ class Settings(BaseSettings):
             f"{self.POSTGRES_DB}"
         )
 
+    @property
+    def CATALOGUE_URL(self):
+        return (
+            f"http://"
+            f"{self.CATALOGUE_SERVICE}:"
+            f"{self.CATALOGUE_PORT}"
+        )
 
 settings = Settings()

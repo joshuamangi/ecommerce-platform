@@ -55,28 +55,28 @@ async def get_order_by_id(
 
 
 # CREATE
-# @router.post(
-#     "/",
-#     status_code=status.HTTP_201_CREATED,
-#     response_model=OrderBase
-# )
-# async def create_order(
-#     order: OrderBase,
-#     db: AsyncSession = Depends(get_db)
-# ):
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=OrderBase
+)
+async def create_order(
+    order: OrderBase,
+    db: AsyncSession = Depends(get_db)
+):
 
-#     new_order = await OrderHandler.create_order(
-#         db=db,
-#         order=order
-#     )
+    new_order = await OrderHandler.create_order(
+        db=db,
+        order=order
+    )
 
-#     if not new_order:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="Catalogue item not found"
-#         )
+    if not new_order:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Catalogue item not found"
+        )
 
-#     return new_order
+    return new_order
 
 
 # UPDATE

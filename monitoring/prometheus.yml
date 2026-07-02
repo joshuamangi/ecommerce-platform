@@ -7,3 +7,15 @@ scrape_configs:
     static_configs:
       - targets:
           - catalogue-api:8000
+  
+  - job_name: orders
+
+    static_configs:
+      - targets:
+        - order-api:8010
+  
+  - job_name: auth
+  
+    static_configs:
+      - targets:
+        - auth-api: auth-api:8020

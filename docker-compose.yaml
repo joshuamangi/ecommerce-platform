@@ -169,9 +169,21 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - catalogue-api
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+  
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
+
 
 volumes:
   pgdata_auth:
@@ -179,3 +191,4 @@ volumes:
   pgdata_order:
   redis_data:
   rabbitmq_data:
+  grafana_data:
