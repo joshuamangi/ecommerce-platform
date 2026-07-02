@@ -1,4 +1,4 @@
-from fastapi import (APIRouter,Depends,HTTPException,status)
+from fastapi import (APIRouter,Depends,HTTPException,Request,status)
 from sqlalchemy.ext.asyncio import AsyncSession
 from data.database import get_db
 from handlers.order_handler import OrderHandler
@@ -61,13 +61,15 @@ async def get_order_by_id(
     response_model=OrderBase
 )
 async def create_order(
+    request: Request,
     order: OrderBase,
     db: AsyncSession = Depends(get_db)
 ):
-
+    token = request.headers.get("Authorization")
     new_order = await OrderHandler.create_order(
         db=db,
-        order=order
+        order=order,
+        token=token
     )
 
     if not new_order:

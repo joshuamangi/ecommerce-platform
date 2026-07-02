@@ -6,13 +6,18 @@ from utils.config import settings
 CATALOGUE_URL = settings.CATALOGUE_URL
 
 # get id and call the Catlogue API
-async def get_catalogue(catalogue_id: int):
+async def get_catalogue(catalogue_id: int, token: str):
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{CATALOGUE_URL}/api/catalogue/{catalogue_id}"
+            f"{CATALOGUE_URL}/catalogue/{catalogue_id}",
+            headers={
+                "Authorization": token
+            }
         )
 
-        if response.status_code == status.HTTP_404_NOT_FOUND:
-            return None
-        response.raise_for_status()
-        return response.json()
+    print("Status:", response.status_code)
+    print("Body:", response.text)
+
+    response.raise_for_status()
+
+    return response.json()

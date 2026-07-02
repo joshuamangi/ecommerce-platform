@@ -29,9 +29,9 @@ class OrderHandler:
         return result.scalars().one_or_none()
 
     @staticmethod
-    async def create_order(db: AsyncSession, order: OrderBase):
+    async def create_order(db: AsyncSession, order: OrderBase, token:str):
         # Validate catalogue exists
-        catalogue = await get_catalogue(order.catalogue_id)
+        catalogue = await get_catalogue(order.catalogue_id, token)
         if not catalogue:
             return None
         new_order = Order(
