@@ -13,7 +13,7 @@ async def lifespan(app: FastAPI):
     await redis_client.aclose()
 
 app = FastAPI(lifespan=lifespan)
-app.add_middleware(MetricsMiddleware)
+app.add_middleware(MetricsMiddleware, service_name="catalogue")
 
 app.include_router(catalogue_route.router)
 metrics_app = make_asgi_app()
