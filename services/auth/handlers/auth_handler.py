@@ -1,4 +1,5 @@
 import datetime
+import structlog
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -8,6 +9,8 @@ from data.models import User
 from schema.auth_schema import LoginRequest, TokenResponse, UserCreate
 from utils.password import PasswordService
 from services.common.security.jwt import TokenService
+
+logger = structlog.get_logger(__name__)
 
 
 class AuthService:
@@ -21,6 +24,7 @@ class AuthService:
     def register(db: Session, user: UserCreate):
         existing = AuthService.get_user_by_email(db=db, email=user.email)
         if existing:
+            logger.exception("Email already in use")
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Email is already in use. Please Register using another email"
@@ -44,14 +48,17 @@ class AuthService:
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
+        logger.info("User created")
         return new_user
 
     @staticmethod
     def authenticate_user(db: Session, email: str, plain_password: str):
         user = AuthService.get_user_by_email(db=db, email=email)
         if not user:
+            logger.warning("User Not Found")
             return None
         if not PasswordService.verify_password(plain_password=plain_password, password_hash=user.password_hash):
+            logger.warning("Invalid user/password")
             return None
         return user
 

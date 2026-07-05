@@ -56,3 +56,5 @@
 - Queues can be thought of as direct, fanout, topic, header. Anytime there is a task, it can be added to a queue
 - Queues make it possible to decouple and scale out
 - The important items to note with regards to Observability is Logs, Metrics and Tracing.
+- You design for availability, throughput, latency and multiple needs
+- It is important to check the size of each row in the database by estimating how much is stored in each row

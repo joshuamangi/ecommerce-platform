@@ -1,6 +1,5 @@
-# connect to db
-
 import orjson
+import structlog
 from redis.asyncio import Redis
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,12 +7,15 @@ from data.models import Catalogue
 from schema.catalogue_schema import CatalogueBase
 from data.redis import redis_client
 
+logger = structlog.get_logger(__name__)
+
 
 class CatalogueHandler:
 
     @staticmethod
     async def check_catalogue_exists_by_id(db: AsyncSession, catalogue_id: int):
         """Checks to see if catalogue already exists by id"""
+        logger.info("Fetching Catalogue", catalogue_id=catalogue_id)
         query = select(Catalogue).where(Catalogue.id == catalogue_id)
         if not query:
             return None
@@ -23,10 +25,12 @@ class CatalogueHandler:
     @staticmethod
     async def check_catalogue_exists_by_sku(db: AsyncSession, catalogue: CatalogueBase):
         """Checks to see if catalogue already exists"""
+        logger.info("Fetching Catalogue", catalogue_sku=catalogue.sku)
         query = select(Catalogue).where(Catalogue.sku == catalogue.sku)
         result = await db.execute(query)
 
         existing_catalogue = result.scalars().first()
+        logger.warning("Catalogue not Found")
         if not existing_catalogue:
             return None
         return existing_catalogue
@@ -34,6 +38,7 @@ class CatalogueHandler:
     @staticmethod
     async def create_catalogue(db: AsyncSession, catalogue: CatalogueBase):
         """Creates a new catalogue entry"""
+        logger.info("Creating Catalogue", catalogue_name=catalogue.name)
         new_catalogue = Catalogue(
             sku=catalogue.sku,
             name=catalogue.name,
@@ -42,6 +47,7 @@ class CatalogueHandler:
         db.add(new_catalogue)
         await db.commit()
         await db.refresh(new_catalogue)
+        logger.info("Catalogue Created", catalogue_name=catalogue.name)
         return new_catalogue
 
     @staticmethod
@@ -63,14 +69,15 @@ class CatalogueHandler:
     @staticmethod
     async def fetch_catalogue_by_id(db: AsyncSession, id: int):
         key = f"catalogue:{id}:data"
-
+        logger.info("Fetching catalogue", catalogue_id=id)
         # Fetch cached data
         try:
             cached_data = await redis_client.get(key)
             if cached_data:
+                logger.info("Redis cache hit", key=key)
                 return orjson.loads(cached_data)
         except Exception as e:
-            print(f"Redis error: {e}")
+            logger.exception("Redis write failed", key=key)
 
         query = select(Catalogue).where(Catalogue.id == id)
         result = await db.execute(query)
@@ -87,8 +94,9 @@ class CatalogueHandler:
                     "stock_quantity": existing_catalogue.stock_quantity
                 }
                 await redis_client.setex(key, 300, orjson.dumps(data))
+                logger.info("Catalogue cached", key=key, ttl=300)
             except Exception as e:
-                print(f"Redis write error: {e}")
+                logger.exception("Redis write failed", key=key)
         return existing_catalogue
 
     @staticmethod
