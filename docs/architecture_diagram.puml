@@ -1,0 +1,96 @@
+@startuml Ecommerce Platform Architecture
+!include <C4/C4_Container>
+!include <C4/C4_Context>
+!include <C4/C4_Component>
+
+LAYOUT_WITH_LEGEND()
+
+title Ecommerce Platform - System Architecture Diagram
+
+Person(client, "External Client", "End user or API consumer")
+
+System_Boundary(ecommerce, "Ecommerce Platform") {
+
+  Boundary(gateway, "API Gateway Layer") {
+    Container(nginx, "Nginx Reverse Proxy", "nginx:alpine", "Routes /api/catalogue/* → catalogue-api:8000, /api/orders/* → order-api:8010, /api/auth/* → auth-api:8020")
+  }
+
+  Boundary(services, "Microservices Layer") {
+
+    Container(auth_api, "Auth Service", "FastAPI + SQLAlchemy (sync)", "Port 8020\nUser registration, login, JWT token issuance")
+    Container(catalogue_api, "Catalogue Service", "FastAPI + SQLAlchemy (async)", "Port 8000\nProduct CRUD, cache-aside with Redis")
+    Container(order_api, "Order Service", "FastAPI + SQLAlchemy (async)", "Port 8010\nOrder management, validates catalogue via HTTP")
+    Container(inventory_svc, "Inventory Service", "Scaffold (empty)", "Not yet implemented")
+    Container(pricing_svc, "Pricing Service", "Scaffold (empty)", "Not yet implemented")
+  }
+
+  Boundary(data, "Data Stores") {
+    ContainerDb(auth_db, "Auth DB", "PostgreSQL 15", "Port 5434\nUsers table")
+    ContainerDb(catalogue_db, "Catalogue DB", "PostgreSQL 15", "Port 5432\nCatalogue items, orders, inventory triggers")
+    ContainerDb(order_db, "Order DB", "PostgreSQL 15", "Port 5433\nOrders table")
+    ContainerDb(redis_cache, "Redis Cache", "Redis 7", "Port 6379\nCatalogue cache (TTL 300s)")
+  }
+
+  Boundary(messaging, "Message Broker") {
+    ContainerDb(rabbitmq, "RabbitMQ", "RabbitMQ 3 (management)", "Ports 5672 (AMQP), 15672 (UI)\nPresent but no active consumers yet")
+  }
+
+  Boundary(monitoring, "Monitoring & Observability") {
+    Container(prometheus, "Prometheus", "prom/prometheus", "Port 9090\nScrapes /metrics from all services")
+    Container(grafana, "Grafana", "grafana/grafana", "Port 3000\nDashboards from Prometheus data")
+    Container(loki, "Loki", "grafana/loki", "Port 3100\nLog aggregation")
+    Container(promtail, "Promtail", "grafana/promtail", "Scrapes Docker container logs → Loki")
+  }
+
+  Boundary(shared, "Shared Libraries") {
+    Container(common_security, "common.security", "Python package", "JWT encode/decode, OAuth2 dependency, permission checking")
+    Container(middleware, "middleware", "Python package", "Structured logging (structlog), Prometheus metrics middleware")
+  }
+}
+
+' === External → Gateway ===
+Rel(client, nginx, "HTTP requests", "HTTPS")
+
+' === Gateway → Services ===
+Rel(nginx, auth_api, "routes /api/auth/*", "HTTP")
+Rel(nginx, catalogue_api, "routes /api/catalogue/*", "HTTP")
+Rel(nginx, order_api, "routes /api/orders/*", "HTTP")
+
+' === Service → Service (internal) ===
+Rel(order_api, catalogue_api, "validates catalogue item", "HTTP (httpx) with JWT forwarding")
+
+' === Service → Data Store ===
+Rel(auth_api, auth_db, "reads/writes users", "SQLAlchemy (sync)")
+Rel(catalogue_api, catalogue_db, "reads/writes catalogue", "SQLAlchemy (async)")
+Rel(order_api, order_db, "reads/writes orders", "SQLAlchemy (async)")
+Rel(catalogue_api, redis_cache, "cache-aside (get/setex/delete)", "Redis async client")
+Rel(order_api, redis_cache, "cache connection (lifespan close)", "Redis async client")
+
+' === Service → Monitoring ===
+Rel(auth_api, prometheus, "exposes /metrics", "Prometheus client")
+Rel(catalogue_api, prometheus, "exposes /metrics", "Prometheus client")
+Rel(order_api, prometheus, "exposes /metrics", "Prometheus client")
+
+' === Monitoring Stack ===
+Rel(prometheus, grafana, "data source", "HTTP")
+Rel(promtail, loki, "pushes logs", "HTTP")
+Rel(loki, grafana, "data source", "HTTP")
+
+' === Shared Library Usage ===
+Rel(auth_api, common_security, "uses JWT creation", "import")
+Rel(catalogue_api, common_security, "uses JWT validation + permissions", "import")
+Rel(order_api, common_security, "uses JWT validation + permissions", "import")
+Rel(auth_api, middleware, "uses logging + metrics", "import")
+Rel(catalogue_api, middleware, "uses logging + metrics", "import")
+Rel(order_api, middleware, "uses logging + metrics", "import")
+
+' === RabbitMQ (future) ===
+Rel_R(rabbitmq, catalogue_api, "potential async messaging", "AMQP")
+Rel_R(rabbitmq, order_api, "potential async messaging", "AMQP")
+
+' === Promtail scrapes all Docker containers ===
+Rel(promtail, auth_api, "scrapes container logs", "Docker socket")
+Rel(promtail, catalogue_api, "scrapes container logs", "Docker socket")
+Rel(promtail, order_api, "scrapes container logs", "Docker socket")
+
+@enduml

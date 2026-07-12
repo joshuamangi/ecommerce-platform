@@ -1,9 +1,12 @@
 import orjson
 import structlog
+import asyncio
+
 from redis.asyncio import Redis
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from data.models import Catalogue
+from data.breaker import database_breaker
 from schema.catalogue_schema import CatalogueBase
 from data.redis import redis_client
 
@@ -80,7 +83,11 @@ class CatalogueHandler:
             logger.exception("Redis write failed", key=key)
 
         query = select(Catalogue).where(Catalogue.id == id)
-        result = await db.execute(query)
+        async def execute_query():
+            await asyncio.sleep(6)
+            return await db.execute(query)
+        result = await database_breaker.call(execute_query)
+        # result = await db.execute(query)
         existing_catalogue = result.scalars().one_or_none()
 
         if existing_catalogue:
