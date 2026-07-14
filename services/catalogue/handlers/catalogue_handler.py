@@ -1,3 +1,5 @@
+import random
+
 import orjson
 import structlog
 import asyncio
@@ -84,9 +86,28 @@ class CatalogueHandler:
 
         query = select(Catalogue).where(Catalogue.id == id)
         async def execute_query():
-            await asyncio.sleep(6)
+            if random.random() < 0.8:
+                raise Exception("Database overloaded")
             return await db.execute(query)
-        result = await database_breaker.call(execute_query)
+        
+        async def catalogue_fallback(catlaogue_id):
+            # If it were possible return cached data
+            try:
+                cached_data = await redis_client.get(key)
+                if cached_data:
+                    logger.info("Redis cache hit", key=key)
+                    return orjson.loads(cached_data)
+                else:
+                     return {
+                        "id": catlaogue_id,
+                        "name": "Unavailable",
+                        "description": "Database temporarily unavailable"
+                    }
+            except Exception as e:
+                logger.exception("Redis write failed", key=key)
+
+        result = await database_breaker.call(func=execute_query, fallback_func=lambda: catalogue_fallback(id))
+           
         # result = await db.execute(query)
         existing_catalogue = result.scalars().one_or_none()
 
