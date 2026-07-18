@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     DB_PORT: int
     REDIS_HOST: str
     REDIS_PORT: int
+    CHAOS_ENABLED: bool = False
+    CHAOSE_MODE: str = "off"
+    CHAOS_PROBABILITY: float = 0.2
+    CHAOS_MAX_DELAY: int = 5
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,

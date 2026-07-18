@@ -58,3 +58,4 @@
 - The important items to note with regards to Observability is Logs, Metrics and Tracing.
 - You design for availability, throughput, latency and multiple needs
 - It is important to check the size of each row in the database by estimating how much is stored in each row
+- I now understand what building fault tolerant systems means!!
