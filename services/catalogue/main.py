@@ -1,6 +1,9 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from routers import catalogue_route
+from utils.config import settings
+
+from services.middleware.chaos import ChaosMiddleware
 from services.middleware.monitoring import MetricsMiddleware
 from services.middleware.logging import LoggingMiddleware
 from services.middleware.structlog_config import configure_logging
@@ -19,6 +22,7 @@ configure_logging("catalogue")
 
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(LoggingMiddleware, service_name="catalogue")
+app.add_middleware(ChaosMiddleware, service_name="catalogue", settings=settings)
 app.add_middleware(MetricsMiddleware, service_name="catalogue")
 
 app.include_router(catalogue_route.router)
